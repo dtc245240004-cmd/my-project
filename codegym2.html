@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bài Tập: Thẻ Tiêu Đề và Đoạn Văn trong HTML</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f7ff',
+                            100: '#e0effe',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                        },
+                        codebg: '#1e1e2e',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom Scrollbars */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #181825;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #45475a;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #585b70;
+        }
+        .code-editor {
+            tab-size: 4;
+            background-color: #1e1e2e;
+            color: #cdd6f4;
+            caret-color: #f5e0dc;
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-100 font-sans min-h-screen flex flex-col antialiased">
+
+    <!-- Header Navigation -->
+    <header class="bg-slate-800/90 border-b border-slate-700/80 backdrop-blur sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="p-2 bg-brand-600 rounded-lg text-white shadow-lg shadow-brand-500/30">
+                    <i class="fa-solid fa-heading text-lg"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-lg leading-tight text-white flex items-center gap-2">
+                        [Bài Tập] Thẻ Tiêu Đề & Đoạn Văn
+                        <span class="text-xs bg-emerald-500/20 text-emerald-400 font-medium px-2 py-0.5 rounded border border-emerald-500/30">HTML5</span>
+                    </h1>
+                    <p class="text-xs text-slate-400">Luyện tập `<h1>`, `<h2>`, `<p>` & Nộp bài GitHub</p>
+                </div>
+            </div>
+
+            <div class="flex items-center space-x-3">
+                <div id="statusBadge" class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20">
+                    <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+                    <span id="statusBadgeText">Chưa hoàn thành</span>
+                </div>
+                <button onclick="resetTemplate()" class="px-3 py-1.5 text-xs text-slate-300 hover:text-white bg-slate-700 hover:bg-slate-600 rounded-lg transition duration-200 flex items-center gap-1.5">
+                    <i class="fa-solid fa-rotate-left"></i> Khôi phục
+                </button>
+                <button onclick="downloadCode()" class="px-3 py-1.5 text-xs text-white bg-brand-600 hover:bg-brand-500 rounded-lg shadow-md transition duration-200 flex items-center gap-1.5">
+                    <i class="fa-solid fa-download"></i> Tải index.html
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Application Grid -->
+    <main class="flex-1 grid grid-cols-1 lg:grid-cols-12 max-w-[1800px] w-full mx-auto p-4 gap-4 overflow-hidden">
+
+        <!-- Left Pane: Code Editor & Quick Snippets (7 cols) -->
+        <section class="lg:col-span-7 flex flex-col bg-slate-800 rounded-xl border border-slate-700/70 shadow-xl overflow-hidden">
+            <!-- Toolbar -->
+            <div class="bg-slate-800/80 border-b border-slate-700/70 px-4 py-2.5 flex flex-wrap items-center justify-between gap-2">
+                <div class="flex items-center gap-2">
+                    <span class="text-xs font-mono text-slate-400 flex items-center gap-1">
+                        <i class="fa-regular fa-file-code text-brand-500"></i> index.html
+                    </span>
+                    <span class="text-xs text-slate-500">|</span>
+                    <span class="text-xs text-slate-400">Gợi ý nhanh:</span>
+                </div>
+
+                <!-- Quick Snippets -->
+                <div class="flex flex-wrap items-center gap-1.5">
+                    <button onclick="insertSnippet('h1')" class="px-2 py-1 text-xs bg-slate-700/80 hover:bg-slate-700 text-slate-200 rounded border border-slate-600/50 hover:border-brand-500 transition font-mono">
+                        + &lt;h1&gt;
+                    </button>
+                    <button onclick="insertSnippet('h2')" class="px-2 py-1 text-xs bg-slate-700/80 hover:bg-slate-700 text-slate-200 rounded border border-slate-600/50 hover:border-brand-500 transition font-mono">
+                        + &lt;h2&gt;
+                    </button>
+                    <button onclick="insertSnippet('p')" class="px-2 py-1 text-xs bg-slate-700/80 hover:bg-slate-700 text-slate-200 rounded border border-slate-600/50 hover:border-brand-500 transition font-mono">
+                        + &lt;p&gt;
+                    </button>
+                    <button onclick="formatCode()" class="px-2.5 py-1 text-xs bg-slate-700 hover:bg-slate-600 text-emerald-400 rounded border border-emerald-500/30 transition flex items-center gap-1" title="Căn chỉnh đẹp code">
+                        <i class="fa-solid fa-wand-magic-sparkles text-[10px]"></i> Formatting
+                    </button>
+                </div>
+            </div>
+
+            <!-- Code Editor Container -->
+            <div class="relative flex-1 min-h-[380px] lg:min-h-[500px] flex">
+                <textarea 
+                    id="htmlEditor" 
+                    class="code-editor w-full h-full p-4 font-mono text-sm leading-relaxed resize-none focus:outline-none focus:ring-1 focus:ring-brand-500 selection:bg-brand-500/30"
+                    placeholder="Nhập mã HTML tại đây..."
+                    spellcheck="false"
+                    oninput="handleEditorInput()"
+                ></textarea>
+            </div>
+
+            <!-- Editor Footer info -->
+            <div class="bg-slate-800 border-t border-slate-700/70 px-4 py-2 flex items-center justify-between text-xs text-slate-400 font-mono">
+                <div class="flex items-center gap-3">
+                    <span>Thực hành HTML Basic</span>
+                    <span id="charCount">0 ký tự</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="inline-block w-2 h-2 rounded-full bg-emerald-500"></span> Live Sync Enabled
+                </div>
+            </div>
+        </section>
+
+        <!-- Right Pane: Multi-tab Preview, Validation & Submission (5 cols) -->
+        <section class="lg:col-span-5 flex flex-col bg-slate-800 rounded-xl border border-slate-700/70 shadow-xl overflow-hidden">
+            
+            <!-- Navigation Tabs -->
+            <div class="bg-slate-800 border-b border-slate-700/70 px-2 flex items-center gap-1 overflow-x-auto">
+                <button onclick="switchTab('preview')" id="tabBtn-preview" class="tab-btn px-3 py-3 text-xs font-medium border-b-2 border-brand-500 text-brand-400 flex items-center gap-1.5 transition">
+                    <i class="fa-solid fa-eye"></i> Xem trước
+                </button>
+                <button onclick="switchTab('grader')" id="tabBtn-grader" class="tab-btn px-3 py-3 text-xs font-medium border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center gap-1.5 transition relative">
+                    <i class="fa-solid fa-list-check"></i> Kiểm tra yêu cầu
+                    <span id="testScoreBadge" class="ml-1 px-1.5 py-0.2 rounded-full text-[10px] bg-slate-700 text-slate-300 font-bold">0/4</span>
+                </button>
+                <button onclick="switchTab('theory')" id="tabBtn-theory" class="tab-btn px-3 py-3 text-xs font-medium border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center gap-1.5 transition">
+                    <i class="fa-solid fa-book-open"></i> Lý thuyết
+                </button>
+                <button onclick="switchTab('submit')" id="tabBtn-submit" class="tab-btn px-3 py-3 text-xs font-medium border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center gap-1.5 transition">
+                    <i class="fa-brands fa-github text-slate-300"></i> Git & Nộp bài
+                </button>
+            </div>
+
+            <!-- Tab Content Area -->
+            <div class="flex-1 relative bg-slate-900 overflow-hidden min-h-[400px]">
+
+                <!-- Tab 1: Live Preview -->
+                <div id="tabContent-preview" class="tab-content absolute inset-0 flex flex-col bg-white">
+                    <div class="bg-slate-100 border-b border-slate-200 px-3 py-1.5 flex items-center justify-between text-xs text-slate-600">
+                        <span class="flex items-center gap-1.5 font-medium">
+                            <i class="fa-solid fa-globe text-slate-400"></i> Giao diện người dùng (Browser View)
+                        </span>
+                        <span class="text-[10px] bg-slate-200 px-1.5 py-0.5 rounded text-slate-600">Standard Rendering</span>
+                    </div>
+                    <iframe id="previewIframe" class="w-full flex-1 border-none bg-white" title="HTML Preview"></iframe>
+                </div>
+
+                <!-- Tab 2: Automated Grading & Checklist -->
+                <div id="tabContent-grader" class="tab-content absolute inset-0 p-4 overflow-y-auto space-y-4 hidden bg-slate-900">
+                    <div class="bg-slate-800 p-4 rounded-lg border border-slate-700">
+                        <div class="flex items-center justify-between mb-2">
+                            <h3 class="font-bold text-sm text-slate-200 flex items-center gap-2">
+                                <i class="fa-solid fa-list-check text-brand-500"></i> Tiến độ yêu cầu bài tập
+                            </h3>
+                            <span id="scoreText" class="text-xs font-bold px-2.5 py-1 rounded-full bg-slate-700 text-brand-400 border border-slate-600">
+                                Đã hoàn thành 0%
+                            </span>
+                        </div>
+                        <p class="text-xs text-slate-400">
+                            Hệ thống kiểm tra mã nguồn HTML của bạn theo thời gian thực dựa trên các tiêu chí bài tập.
+                        </p>
+                    </div>
+
+                    <!-- Test Items Container -->
+                    <div class="space-y-3" id="checklistContainer">
+                        <!-- Items rendered via JS -->
+                    </div>
+
+                    <!-- Feedback Box -->
+                    <div id="feedbackBox" class="p-3.5 rounded-lg border text-xs leading-relaxed hidden">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+                <!-- Tab 3: Theory & Cheatsheet -->
+                <div id="tabContent-theory" class="tab-content absolute inset-0 p-5 overflow-y-auto space-y-4 hidden bg-slate-900 text-slate-300 text-xs leading-relaxed">
+                    <div class="bg-slate-800/90 p-4 rounded-xl border border-slate-700/80">
+                        <h3 class="font-bold text-sm text-brand-400 mb-2 flex items-center gap-2">
+                            <i class="fa-solid fa-graduation-cap"></i> Thẻ Tiêu Đề (Headings: &lt;h1&gt; đến &lt;h6&gt;)
+                        </h3>
+                        <p class="mb-2">HTML cung cấp 6 mức tiêu đề từ <code>&lt;h1&gt;</code> (quan trọng nhất, kích thước lớn nhất) đến <code>&lt;h6&gt;</code> (ít quan trọng nhất).</p>
+                        <div class="bg-slate-950 p-2.5 rounded font-mono text-[11px] space-y-1 text-slate-300 my-2">
+                            <div><span class="text-pink-400">&lt;h1&gt;</span>Tiêu đề cấp 1 (Chính)<span class="text-pink-400">&lt;/h1&gt;</span></div>
+                            <div><span class="text-pink-400">&lt;h2&gt;</span>Tiêu đề cấp 2 (Phụ)<span class="text-pink-400">&lt;/h2&gt;</span></div>
+                            <div><span class="text-pink-400">&lt;h3&gt;</span>Tiêu đề cấp 3 (Mục nhỏ)<span class="text-pink-400">&lt;/h3&gt;</span></div>
+                        </div>
+                        <ul class="list-disc pl-4 space-y-1 text-slate-400">
+                            <li>Chỉ nên sử dụng <strong>1 thẻ &lt;h1&gt; duy nhất</strong> trên mỗi trang web (tốt cho SEO).</li>
+                            <li>Sử dụng tiêu đề theo thứ tự thứ bậc hợp lý, không nên nhảy cóc từ &lt;h1&gt; xuống &lt;h4&gt;.</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-slate-800/90 p-4 rounded-xl border border-slate-700/80">
+                        <h3 class="font-bold text-sm text-brand-400 mb-2 flex items-center gap-2">
+                            <i class="fa-solid fa-paragraph"></i> Thẻ Đoạn Văn (&lt;p&gt;)
+                        </h3>
+                        <p class="mb-2">Thẻ <code>&lt;p&gt;</code> dùng để định dạng một đoạn văn bản (Paragraph). Trình duyệt tự động thêm khoảng trống (margin) trước và sau mỗi thẻ đoạn văn.</p>
+                        <div class="bg-slate-950 p-2.5 rounded font-mono text-[11px] text-slate-300 my-2">
+                            <span class="text-pink-400">&lt;p&gt;</span>Đây là nội dung của một đoạn văn bản.<span class="text-pink-400">&lt;/p&gt;</span>
+                        </div>
+                        <p class="text-slate-400">
+                            <strong>Mẹo:</strong> Không dùng thẻ <code>&lt;p&gt;</code> lồng trong một thẻ <code>&lt;p&gt;</code> khác.
+                        </p>
+                    </div>
+
+                    <div class="bg-slate-800/90 p-4 rounded-xl border border-slate-700/80">
+                        <h3 class="font-bold text-sm text-brand-400 mb-2 flex items-center gap-2">
+                            <i class="fa-solid fa-lightbulb"></i> Cấu trúc một trang HTML5 chuẩn
+                        </h3>
+                        <pre class="bg-slate-950 p-3 rounded font-mono text-[11px] text-emerald-400 overflow-x-auto"><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;meta charset="utf-8"&gt;
+    &lt;title&gt;Trang của tôi&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;!-- Nội dung bài viết nằm ở đây --&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+                    </div>
+                </div>
+
+                <!-- Tab 4: GitHub Submission & Instructions -->
+                <div id="tabContent-submit" class="tab-content absolute inset-0 p-5 overflow-y-auto space-y-4 hidden bg-slate-900 text-xs">
+                    
+                    <!-- Git Guide -->
+                    <div class="bg-slate-800 p-4 rounded-xl border border-slate-700">
+                        <h3 class="font-bold text-sm text-slate-100 mb-2 flex items-center gap-2">
+                            <i class="fa-brands fa-git-alt text-orange-500 text-base"></i> Hướng dẫn đưa mã nguồn lên GitHub
+                        </h3>
+                        <ol class="list-decimal pl-4 space-y-2 text-slate-300">
+                            <li>
+                                Tạo một tệp tên <code>index.html</code> trên máy tính và lưu mã HTML bài tập này vào.
+                            </li>
+                            <li>
+                                Mở terminal/command prompt tại thư mục lưu tệp và chạy các câu lệnh:
+                                <div class="bg-slate-950 p-2.5 rounded font-mono text-[11px] text-slate-200 my-1 space-y-1 select-all border border-slate-800">
+                                    <div>git init</div>
+                                    <div>git add index.html</div>
+                                    <div>git commit -m "Bài tập sử dụng thẻ tiêu đề và đoạn văn"</div>
+                                    <div>git branch -M main</div>
+                                    <div>git remote add origin https://github.com/TênUser/TenRepo.git</div>
+                                    <div>git push -u origin main</div>
+                                </div>
+                            </li>
+                            <li>Đảm bảo Repository ở chế độ <strong>Public</strong> (Công khai).</li>
+                        </ol>
+                    </div>
+
+                    <!-- Submission Form -->
+                    <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 space-y-3">
+                        <h3 class="font-bold text-sm text-slate-100 flex items-center gap-2">
+                            <i class="fa-solid fa-paper-plane text-brand-500"></i> Form Nộp Bài Tập
+                        </h3>
+
+                        <div>
+                            <label class="block text-slate-300 font-medium mb-1">Họ và tên người nộp <span class="text-red-400">*</span></label>
+                            <input type="text" id="studentName" placeholder="Ví dụ: Nguyễn Văn A" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-200 focus:outline-none focus:border-brand-500 text-xs">
+                        </div>
+
+                        <div>
+                            <label class="block text-slate-300 font-medium mb-1">Mã số sinh viên / Học viên <span class="text-red-400">*</span></label>
+                            <input type="text" id="studentId" placeholder="Ví dụ: B20DCCN001" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-200 focus:outline-none focus:border-brand-500 text-xs">
+                        </div>
+
+                        <div>
+                            <label class="block text-slate-300 font-medium mb-1">Đường link GitHub Repository <span class="text-red-400">*</span></label>
+                            <input type="url" id="githubUrl" placeholder="https://github.com/username/html-headings-practice" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-200 focus:outline-none focus:border-brand-500 text-xs font-mono">
+                            <p class="text-[10px] text-slate-400 mt-1">Đường dẫn phải bắt đầu bằng https://github.com/...</p>
+                        </div>
+
+                        <button onclick="submitAssignment()" class="w-full py-2.5 bg-brand-600 hover:bg-brand-500 text-white font-semibold rounded-lg shadow-md transition duration-200 flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-circle-check"></i> Xác nhận & Nộp bài
+                        </button>
+                    </div>
+
+                    <!-- Receipt Modal/Output -->
+                    <div id="submissionReceipt" class="hidden bg-emerald-950/40 border border-emerald-500/40 p-4 rounded-xl space-y-2">
+                        <div class="flex items-center gap-2 text-emerald-400 font-bold text-sm">
+                            <i class="fa-solid fa-circle-check text-base"></i> Đã ghi nhận nộp bài thành công!
+                        </div>
+                        <div class="text-[11px] text-slate-300 space-y-1 font-mono">
+                            <div><strong>Người nộp:</strong> <span id="receiptName"></span></div>
+                            <div><strong>MSSV:</strong> <span id="receiptId"></span></div>
+                            <div><strong>Thời gian:</strong> <span id="receiptTime"></span></div>
+                            <div><strong>GitHub:</strong> <a id="receiptLink" target="_blank" class="text-brand-400 underline"></a></div>
+                            <div><strong>Trạng thái bài làm:</strong> <span id="receiptScore" class="font-bold"></span></div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- App JavaScript Logic -->
+    <script>
+        // Default HTML Template matching exercise starter or clean setup
+        const initialTemplate = `<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Trang web của tôi</title>
+    </head>
+    <body>
+        <h1 style="color: #2563eb;">Chào mừng đến với trang web của tôi</h1>
+        
+        <h2>Giới thiệu bản thân</h2>
+        
+        <p>Tôi là một người rất thích đọc sách công nghệ, nghe nhạc lo-fi và tìm hiểu về thiết kế giao diện ứng dụng web trong thời gian rảnh rỗi.</p>
+        
+        <p>Mục tiêu của tôi khi học lập trình là làm chủ ngôn ngữ HTML, CSS, JavaScript để có thể tự tay phát triển các sản phẩm web hữu ích và trở thành một Full-stack Developer chuyên nghiệp.</p>
+    </body>
+</html>`;
+
+        // Exercise Criteria definitions
+        const requirements = [
+            {
+                id: 'h1_check',
+                title: 'Thẻ <h1> Tiêu đề chính',
+                desc: 'Có thẻ <h1> chứa chính xác nội dung: "Chào mừng đến với trang web của tôi"',
+                test: (doc) => {
+                    const h1s = Array.from(doc.querySelectorAll('h1'));
+                    return h1s.some(el => el.textContent.trim().toLowerCase().includes('chào mừng đến với trang web của tôi'));
+                }
+            },
+            {
+                id: 'h2_check',
+                title: 'Thẻ <h2> Tiêu đề phụ',
+                desc: 'Có thẻ <h2> chứa chính xác nội dung: "Giới thiệu bản thân"',
+                test: (doc) => {
+                    const h2s = Array.from(doc.querySelectorAll('h2'));
+                    return h2s.some(el => el.textContent.trim().toLowerCase().includes('giới thiệu bản thân'));
+                }
+            },
+            {
+                id: 'p1_check',
+                title: 'Thẻ <p> Thứ nhất (Sở thích)',
+                desc: 'Có ít nhất 1 thẻ <p> chứa nội dung mô tả về sở thích cá nhân',
+                test: (doc) => {
+                    const ps = doc.querySelectorAll('p');
+                    return ps.length >= 1 && ps[0].textContent.trim().length >= 10;
+                }
+            },
+            {
+                id: 'p2_check',
+                title: 'Thẻ <p> Thứ hai (Mục tiêu học tập)',
+                desc: 'Có ít nhất thẻ <p> thứ 2 chứa nội dung mô tả mục tiêu học lập trình',
+                test: (doc) => {
+                    const ps = doc.querySelectorAll('p');
+                    return ps.length >= 2 && ps[1].textContent.trim().length >= 10;
+                }
+            }
+        ];
+
+        let editor = document.getElementById('htmlEditor');
+        let currentTab = 'preview';
+
+        // Initialize App
+        window.addEventListener('DOMContentLoaded', () => {
+            // Restore saved state or template
+            const savedCode = localStorage.getItem('html_exercise_code');
+            editor.value = savedCode !== null ? savedCode : initialTemplate;
+
+            updateEditorAndPreview();
+            restoreSubmissionInfo();
+        });
+
+        // Core Input Handler
+        function handleEditorInput() {
+            updateEditorAndPreview();
+            // Save to localStorage
+            localStorage.setItem('html_exercise_code', editor.value);
+        }
+
+        // Update Preview and Run Validation
+        function updateEditorAndPreview() {
+            const code = editor.value;
+            
+            // Update character count
+            document.getElementById('charCount').innerText = `${code.length} ký tự`;
+
+            // Update Iframe Preview
+            const iframe = document.getElementById('previewIframe');
+            const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+            iframeDoc.open();
+            iframeDoc.write(code);
+            iframeDoc.close();
+
+            // Run Validation
+            validateCode(code);
+        }
+
+        // Code Validation Logic
+        function validateCode(code) {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(code, 'text/html');
+
+            let passedCount = 0;
+            const container = document.getElementById('checklistContainer');
+            container.innerHTML = '';
+
+            requirements.forEach((req, idx) => {
+                const isPassed = req.test(doc);
+                if (isPassed) passedCount++;
+
+                const card = document.createElement('div');
+                card.className = `p-3 rounded-lg border transition duration-200 flex items-start gap-3 ${
+                    isPassed 
+                        ? 'bg-emerald-950/20 border-emerald-500/40 text-emerald-300' 
+                        : 'bg-slate-800 border-slate-700 text-slate-400'
+                }`;
+
+                card.innerHTML = `
+                    <div class="mt-0.5">
+                        ${isPassed 
+                            ? '<i class="fa-solid fa-circle-check text-emerald-400 text-base"></i>' 
+                            : '<i class="fa-regular fa-circle text-slate-500 text-base"></i>'}
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex items-center justify-between">
+                            <h4 class="font-semibold text-xs text-slate-200">${req.title}</h4>
+                            <span class="text-[10px] font-mono px-1.5 py-0.5 rounded ${
+                                isPassed ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' : 'bg-slate-700 text-slate-400'
+                            }">
+                                ${isPassed ? 'Đạt' : 'Chưa đạt'}
+                            </span>
+                        </div>
+                        <p class="text-[11px] opacity-80 mt-0.5">${req.desc}</p>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+
+            // Update Score Stats
+            const total = requirements.length;
+            const percentage = Math.round((passedCount / total) * 100);
+            
+            const scoreText = document.getElementById('scoreText');
+            scoreText.innerText = `Đã hoàn thành ${passedCount}/${total} (${percentage}%)`;
+            
+            const scoreBadge = document.getElementById('testScoreBadge');
+            scoreBadge.innerText = `${passedCount}/${total}`;
+
+            const topBadge = document.getElementById('statusBadge');
+            const topBadgeText = document.getElementById('statusBadgeText');
+
+            if (passedCount === total) {
+                topBadge.className = 'hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30';
+                topBadgeText.innerText = 'Hoàn thành 100%';
+                scoreBadge.className = 'ml-1 px-1.5 py-0.2 rounded-full text-[10px] bg-emerald-500 text-white font-bold';
+            } else {
+                topBadge.className = 'hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20';
+                topBadgeText.innerText = `Tiến độ ${percentage}%`;
+                scoreBadge.className = 'ml-1 px-1.5 py-0.2 rounded-full text-[10px] bg-slate-700 text-slate-300 font-bold';
+            }
+
+            // Feedback Box
+            const feedbackBox = document.getElementById('feedbackBox');
+            if (passedCount === total) {
+                feedbackBox.className = 'p-3.5 rounded-lg border bg-emerald-950/30 border-emerald-500/30 text-emerald-300 text-xs leading-relaxed block';
+                feedbackBox.innerHTML = '<i class="fa-solid fa-trophy text-amber-400 mr-1.5"></i> <strong>Tuyệt vời!</strong> Bạn đã đáp ứng đầy đủ tất cả các yêu cầu của bài tập. Bạn có thể sẵn sàng nộp link GitHub repository!';
+            } else {
+                feedbackBox.className = 'p-3.5 rounded-lg border bg-amber-950/20 border-amber-500/30 text-amber-300 text-xs leading-relaxed block';
+                feedbackBox.innerHTML = '<i class="fa-solid fa-circle-info mr-1.5"></i> Vui lòng hoàn thiện các mục đánh dấu chưa đạt ở trên để hoàn thành bài tập.';
+            }
+        }
+
+        // Tab Switcher
+        function switchTab(tabId) {
+            currentTab = tabId;
+            const tabs = ['preview', 'grader', 'theory', 'submit'];
+            
+            tabs.forEach(t => {
+                const btn = document.getElementById(`tabBtn-${t}`);
+                const content = document.getElementById(`tabContent-${t}`);
+                if (t === tabId) {
+                    btn.classList.add('border-brand-500', 'text-brand-400');
+                    btn.classList.remove('border-transparent', 'text-slate-400');
+                    content.classList.remove('hidden');
+                } else {
+                    btn.classList.remove('border-brand-500', 'text-brand-400');
+                    btn.classList.add('border-transparent', 'text-slate-400');
+                    content.classList.add('hidden');
+                }
+            });
+        }
+
+        // Quick Snippets Inserter
+        function insertSnippet(tag) {
+            const el = document.getElementById('htmlEditor');
+            let snippet = '';
+
+            if (tag === 'h1') {
+                snippet = '\n<h1>Chào mừng đến với trang web của tôi</h1>\n';
+            } else if (tag === 'h2') {
+                snippet = '\n<h2>Giới thiệu bản thân</h2>\n';
+            } else if (tag === 'p') {
+                snippet = '\n<p>Nội dung đoạn văn mô tả tại đây...</p>\n';
+            }
+
+            const startPos = el.selectionStart;
+            const endPos = el.selectionEnd;
+            el.value = el.value.substring(0, startPos) + snippet + el.value.substring(endPos, el.value.length);
+            
+            handleEditorInput();
+            el.focus();
+            el.selectionStart = startPos + snippet.length;
+            el.selectionEnd = startPos + snippet.length;
+        }
+
+        // Format HTML Code
+        function formatCode() {
+            let code = editor.value;
+            // Simple neat indentation logic
+            let formatted = '';
+            let pad = 0;
+            
+            // Basic line split and clean
+            const lines = code.split('\n');
+            lines.forEach((line) => {
+                let trimmed = line.trim();
+                if (trimmed.startsWith('</') || trimmed.startsWith('</html>') || trimmed.startsWith('</body>')) {
+                    pad = Math.max(0, pad - 1);
+                }
+                
+                if (trimmed.length > 0) {
+                    formatted += '    '.repeat(pad) + trimmed + '\n';
+                } else {
+                    formatted += '\n';
+                }
+
+                if (trimmed.startsWith('<') && !trimmed.startsWith('</') && !trimmed.startsWith('<!') && !trimmed.endsWith('/>') && !trimmed.includes('</')) {
+                    if (['html', 'body', 'head', 'ul', 'ol', 'div'].some(t => trimmed.startsWith(`<${t}`))) {
+                        pad++;
+                    }
+                }
+            });
+
+            editor.value = formatted.trim();
+            handleEditorInput();
+        }
+
+        // Reset Code Template
+        function resetTemplate() {
+            if (confirm('Bạn có chắc chắn muốn khôi phục mã HTML về trạng thái ban đầu?')) {
+                editor.value = initialTemplate;
+                handleEditorInput();
+            }
+        }
+
+        // Download HTML File
+        function downloadCode() {
+            const blob = new Blob([editor.value], { type: 'text/html;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'index.html';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        // Handle Submission Form
+        function submitAssignment() {
+            const name = document.getElementById('studentName').value.trim();
+            const studentId = document.getElementById('studentId').value.trim();
+            const githubUrl = document.getElementById('githubUrl').value.trim();
+
+            if (!name || !studentId) {
+                alert('Vui lòng điền đầy đủ Họ và tên và Mã số sinh viên!');
+                return;
+            }
+
+            const gitRegex = /^https?:\/\/(www\.)?github\.com\/[a-zA-Z0-9_-]+\/[a-zA-Z0-9_.-]+\/?$/;
+            if (!gitRegex.test(githubUrl)) {
+                alert('Đường dẫn GitHub không hợp lệ! Vui lòng nhập đúng định dạng: https://github.com/username/repository');
+                return;
+            }
+
+            // Check completion level
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(editor.value, 'text/html');
+            let passed = 0;
+            requirements.forEach(r => { if (r.test(doc)) passed++; });
+
+            const timestamp = new Date().toLocaleString('vi-VN');
+
+            const submissionData = {
+                name,
+                studentId,
+                githubUrl,
+                timestamp,
+                score: `${passed}/${requirements.length}`
+            };
+
+            localStorage.setItem('html_exercise_submission', JSON.stringify(submissionData));
+
+            displayReceipt(submissionData);
+            alert('Nộp bài thành công! Thông tin bài làm đã được ghi nhận.');
+        }
+
+        function displayReceipt(data) {
+            const receipt = document.getElementById('submissionReceipt');
+            document.getElementById('receiptName').innerText = data.name;
+            document.getElementById('receiptId').innerText = data.studentId;
+            document.getElementById('receiptTime').innerText = data.timestamp;
+            
+            const linkEl = document.getElementById('receiptLink');
+            linkEl.href = data.githubUrl;
+            linkEl.innerText = data.githubUrl;
+
+            document.getElementById('receiptScore').innerText = `${data.score} Tiêu chí`;
+
+            receipt.classList.remove('hidden');
+        }
+
+        function restoreSubmissionInfo() {
+            const saved = localStorage.getItem('html_exercise_submission');
+            if (saved) {
+                try {
+                    const data = JSON.parse(saved);
+                    document.getElementById('studentName').value = data.name || '';
+                    document.getElementById('studentId').value = data.studentId || '';
+                    document.getElementById('githubUrl').value = data.githubUrl || '';
+                    displayReceipt(data);
+                } catch(e) {}
+            }
+        }
+    </script>
+</body>
+</html>
